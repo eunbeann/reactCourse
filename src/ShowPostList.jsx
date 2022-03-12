@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   PostSection,
   PostTitleDiv,
@@ -20,37 +20,50 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import EachPost from './EachPost';
 
+import axios from 'axios';
 const initialPostList = [
   { id: 1, title: '학보, 시사N 대학기자상 취재' },
   { id: 2, title: '학보, 시사N 대학기자상 취재' },
   { id: 3, title: '학보, 시사N 대학기자상 취재' },
 ];
 
-function ShowPostList() {
+const ShowPostList = ({ APIurl }) => {
   const [loading, setLoading] = useState(true);
   const [isPost, setIsPost] = useState(false);
   const [postList, setPostList] = useState([]);
 
   const navigate = useNavigate();
-
   const goWrite = () => {
     navigate('/write');
   };
 
-  const addPost = () => {
-    setPostList((postList) => [
-      ...postList,
-      { id: 4, title: '학보, 시사N 대학기자상 취재' },
-    ]);
-  };
+  const addPost = useCallback(() => {
+    setPostList(
+      postList.concat({ id: 4, title: '학보, 시사N 대학기자상 취재' }),
+    );
+    // setPostList((postList) => [
+    //   ...postList,
+    //   { id: 4, title: '학보, 시사N 대학기자상 취재' },
+    // ]);
+  }, [postList]);
 
   useEffect(() => {
+    axios
+      .get(APIurl + 'list/?page=1&page_size=10')
+      .then((Response) => {
+        console.log(Response.data);
+      })
+      .catch((Error) => {
+        console.log(Error);
+      });
+
     setTimeout(() => {
       setPostList(initialPostList);
       setLoading(false);
     }, 600);
   }, []);
 
+  console.log('render');
   return (
     <>
       <PostSection>
@@ -98,6 +111,6 @@ function ShowPostList() {
       )}
     </>
   );
-}
+};
 
 export default ShowPostList;

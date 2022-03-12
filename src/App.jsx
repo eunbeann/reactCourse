@@ -1,8 +1,8 @@
 import { MediaDiv, Main } from './styledComponent';
 import { ThemeProvider } from 'styled-components';
 import { darkTheme, GlobalStyles, lightTheme } from './styles';
-import { useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Slogun from './Slogun';
 import ShowPostList from './ShowPostList';
@@ -11,6 +11,7 @@ import ShowPost from './ShowPost';
 import WritePost from './WritePost';
 
 function App() {
+  const APIurl = 'https://reactapitest.pythonanywhere.com/api/';
   const [darkMode, setDarkMode] = useState(true);
 
   return (
@@ -22,7 +23,11 @@ function App() {
           <Main>
             <Slogun></Slogun>
             <Routes>
-              <Route exact path="/" element={<ShowPostList></ShowPostList>} />
+              <Route
+                exact
+                path="/"
+                element={<ShowPostList APIurl={APIurl}></ShowPostList>}
+              />
               <Route path="/write" element={<WritePost></WritePost>} />
               <Route path="/post/:postID" element={<ShowPost></ShowPost>} />
             </Routes>
